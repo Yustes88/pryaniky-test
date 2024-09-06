@@ -1,10 +1,7 @@
-import { Box, Button, Modal, Paper, TextField, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import axios from 'axios'; // Make sure axios is imported
-import React, { useEffect, useState } from 'react';
-import { addNewData, deleteData, editData, getData } from '../api/getData';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { addNewData } from '../api/getData';
 import { IDocument } from '../interface/IRow';
-import { createColumns } from '../utils/utils';
 
 export default function DataTable() {
   const [data, setData] = useState<IDocument[]>([]);
@@ -20,23 +17,6 @@ export default function DataTable() {
     employeeSigDate: '',
     employeeSignatureName: '',
   });
-
-  const handleProcessRowUpdate = async (newRow: IDocument): Promise<IDocument> => {
-    const updatedRow = { ...newRow };
-
-    await editData(updatedRow.id, updatedRow);
-
-    setData((prevData) =>
-      prevData.map((item) => (item.id === updatedRow.id ? updatedRow : item))
-    );
-
-    return updatedRow;
-  };
-
-  const handleDeleteRow = async (id: string) => {
-    setData((prevData) => prevData.filter((item) => item.id !== id));
-    await deleteData(id);
-  };
 
   const handleOpen = () => setOpen(true); // Open the modal
   const handleClose = () => setOpen(false); // Close the modal
@@ -62,22 +42,8 @@ export default function DataTable() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getData();
-      setData(result.data);
-    };
-    fetchData();
-  }, []);
-
-  const columns = createColumns(handleDeleteRow);
-
   return (
     <>
-      <Button onClick={handleOpen} variant="contained" color="inherit" sx={{ mb: 2 }}>
-        Add New Row
-      </Button>
-
       {/* Modal for Adding New Row */}
       <Modal open={open} onClose={handleClose}>
         <Box sx={{ 
@@ -167,18 +133,6 @@ export default function DataTable() {
           </Button>
         </Box>
       </Modal>
-
-      <Paper sx={{ height: 400, width: '100%' }}>
-        <DataGrid
-          editMode="row"
-          rows={data}
-          columns={columns}
-          hideFooterPagination
-          sx={{ border: 0 }}
-          processRowUpdate={handleProcessRowUpdate}
-          onProcessRowUpdateError={(error) => console.log(error)}
-        />
-      </Paper>
     </>
   );
 }
