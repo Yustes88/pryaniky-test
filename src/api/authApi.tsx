@@ -8,6 +8,10 @@ if (!API_URL) {
 
 export const axiosInstance = axios.create({
   baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json', // Ensure Content-Type is correct
+    // Include other necessary headers like Authorization if needed
+  },
 })
 
 axiosInstance.interceptors.request.use(
