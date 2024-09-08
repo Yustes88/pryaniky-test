@@ -1,4 +1,4 @@
-import { Button, TextField, CircularProgress, Snackbar, Alert } from '@mui/material';
+import { Button, TextField, CircularProgress, Input, FormHelperText } from '@mui/material';
 import React, { useState } from 'react';
 import { addNewData } from '../api/getData';
 import { IDocument } from '../interface/IRow';
@@ -14,12 +14,6 @@ type AddNewRowModalProps = {
 export default function FormInputs({ setData, handleClose }: AddNewRowModalProps) {
   const [newRow, setNewRow] = useState<IDocument>({ ...defaultDocument, id: uuidv4() });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +23,6 @@ export default function FormInputs({ setData, handleClose }: AddNewRowModalProps
       [name]: value,
     }));
 
-    // Clear error when user types in input
     if (errors[name]) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -46,27 +39,25 @@ export default function FormInputs({ setData, handleClose }: AddNewRowModalProps
       }
     });
     setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0; // Returns true if no errors
+    return Object.keys(tempErrors).length === 0;
   };
 
   const handleAddRow = async () => {
-    if (!validate()) return; // Stop if validation fails
+    if (!validate()) return;
+    const formattedRow = { ...newRow, employeeNumber: newRow.employeeNumber.toString() };
+
 
     setIsLoading(true);
     try {
-      await addNewData(newRow);
-      setData((prevData) => [...prevData, newRow]);
-      setSnackbar({ open: true, message: 'Row added successfully!', severity: 'success' });
+      await addNewData(formattedRow);
+      setData((prevData) => [...prevData, formattedRow]);
+      alert('Data is sent successfully')
       handleClose();
     } catch (error) {
       console.error('Error adding new row:', error);
-      setSnackbar({ open: true, message: 'Error adding new row!', severity: 'error' });
+      alert('Something went wrong, please try again later')
     }
     setIsLoading(false);
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -126,16 +117,19 @@ export default function FormInputs({ setData, handleClose }: AddNewRowModalProps
         error={!!errors.documentType}
         helperText={errors.documentType}
       />
-      <TextField
-        label="Employee Number"
+        {errors.employeeNumber && (
+          <FormHelperText error>{errors.employeeNumber}</FormHelperText>
+        )}
+      <Input
+        type="number"
         name="employeeNumber"
+        placeholder="Employee number"
         fullWidth
         value={newRow.employeeNumber}
         onChange={handleInputChange}
         sx={{ mb: 2 }}
         required
         error={!!errors.employeeNumber}
-        helperText={errors.employeeNumber}
       />
       <TextField
         type="datetime-local"
@@ -163,13 +157,6 @@ export default function FormInputs({ setData, handleClose }: AddNewRowModalProps
       <Button variant="contained" color="primary" onClick={handleAddRow} disabled={isLoading}>
         {isLoading ? <CircularProgress size={24} /> : 'Confirm'}
       </Button>
-
-      {/* Snackbar for Success or Error Messages */}
-      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </>
   );
 }

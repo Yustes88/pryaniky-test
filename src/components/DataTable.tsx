@@ -12,18 +12,20 @@ export default function DataTable() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleProcessRowUpdate = async (newRow: IDocument): Promise<IDocument> => {
-    setIsLoading(true)
-    const updatedRow = { ...newRow };
-
+    setIsLoading(true);
+  
+    const updatedRow = { ...newRow, employeeNumber: newRow.employeeNumber.toString() };
+  
     await editData(updatedRow.id, updatedRow);
-
+  
     setData((prevData) =>
       prevData.map((item) => (item.id === updatedRow.id ? updatedRow : item))
     );
-
-    setIsLoading(false)
+  
+    setIsLoading(false);
     return updatedRow;
   };
+  
 
   const handleDeleteRow = async (id: string) => {
     setIsLoading(true)

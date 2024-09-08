@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import Login from "./api/login";
 import MainPage from "./components/MainPage";
+import LoginPage from "./components/LoginPage";
 
 const RequireAuth: React.FC<{element: React.ReactElement}> = ({element}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,7 +45,7 @@ function App() {
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route
             path="/"
             element={<RequireAuth element={<MainPage />} />}
