@@ -1,4 +1,4 @@
-import { Button, Paper } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { deleteData, editData, getData } from '../api/getData';
@@ -74,6 +74,7 @@ export default function DataTable() {
             },
           }}
         />
+        <Box>*For edditing double click on cell. To save - press enter</Box>
       </Paper>
     </>
   );
