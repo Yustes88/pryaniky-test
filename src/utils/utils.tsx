@@ -1,6 +1,7 @@
 import { GridActionsCellItem, GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 
+
 export const createColumns = (handleDeleteRow: (id: string) => void): GridColDef[] => [
     {
       field: 'companySigDate',
@@ -33,3 +34,25 @@ export const createColumns = (handleDeleteRow: (id: string) => void): GridColDef
       ],
     },
   ];
+
+export const defaultDocument = {
+  companySigDate: '',
+  companySignatureName: '',
+  documentName: '',
+  documentStatus: '',
+  documentType: '',
+  employeeNumber: '',
+  employeeSigDate: '',
+  employeeSignatureName: '',
+}
+
+export const boxStyles = {
+    position: 'absolute', 
+    top: '50%', 
+    left: '50%', 
+    transform: 'translate(-50%, -50%)', 
+    bgcolor: 'background.paper', 
+    borderRadius: 2, 
+    boxShadow: 24, 
+    p: 4 
+}

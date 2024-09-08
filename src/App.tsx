@@ -9,15 +9,14 @@ const RequireAuth: React.FC<{element: React.ReactElement}> = ({element}) => {
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    console.log(token)
     if (!token) {
       navigate('/login');
       return;
     }
 
-    fetch('/ru/data/v3/testmethods/docs/userdocs/get', { // Using a secured endpoint
+    fetch('/ru/data/v3/testmethods/docs/userdocs/get', {
       headers: {
-        'x-auth': token,  // Pass the token in the header for authentication
+        'x-auth': token,
       },
     })
         .then(response => {
@@ -35,7 +34,7 @@ const RequireAuth: React.FC<{element: React.ReactElement}> = ({element}) => {
   }, [navigate]);
 
   if (!isAuthenticated) {
-    return <div>Authenticating...</div>;
+    return <div>Loading...</div>;
   }
 
   return element;

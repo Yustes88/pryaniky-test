@@ -11,7 +11,7 @@ export interface IDocument {
   }
   
   export interface IApiResponse {
-    data: IDocument[];  // Corrected type to reflect the data structure
+    data: IDocument[];
     error_code: number;
     error_message: string;
     profiling: string;

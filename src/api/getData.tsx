@@ -20,19 +20,16 @@ export const editData = async (id: string, updatedRow: IDocument): Promise<void>
     return response.data
   }
 
-export const addNewData = async (newRow: IDocument): Promise<void> => {
-    const response: AxiosResponse<void> =
-      await axiosInstance.post(`/ru/data/v3/testmethods/docs/userdocs/create`,
-        {
-          ...newRow,
-          id: new Date() + '',
-          companySigDate: new Date(newRow.companySigDate).toISOString(),
-          employeeSigDate: new Date(newRow.employeeSigDate).toISOString(),
-        }
-      )
 
-    return response.data
-  }
+export const addNewData = async (newRow: IDocument): Promise<AxiosResponse<IDocument>> => {
+  const response: AxiosResponse<IDocument> = await axiosInstance.post(
+    `/ru/data/v3/testmethods/docs/userdocs/create`,
+    newRow
+  );
+
+  return response; // Return the full AxiosResponse
+};
+
 
 export const deleteData = async (id: string): Promise<void> => {
     const response: AxiosResponse<void> =
